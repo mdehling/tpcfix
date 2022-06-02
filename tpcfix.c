@@ -43,13 +43,13 @@
 /* TPC file structure contains 2b length in little endian. */
 struct record {
 	unsigned short int length;
-  	char data[];
+	char data[];
 };
 
 
 int main(int argc, char **argv)
 {
- 	int status;
+	int status;
 
 	struct FAB fab_in  = cc$rms_fab,
 	           fab_out = cc$rms_fab;
@@ -64,9 +64,9 @@ int main(int argc, char **argv)
 
 	if (argc != 3) {
 		printf("Usage: %s <input.tpc> <output.tpc>\n", argv[0]);
-	  	sys$exit(SS$_ABORT);
+		sys$exit(SS$_ABORT);
 	};
-                                        
+
 	fab_in.fab$b_fac = FAB$M_GET;
 	fab_in.fab$l_fna = argv[1];
 	fab_in.fab$b_fns = strlen(argv[1]);
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 		status = SS$_ABORT;
 		goto close_input;
 	};
-                                        
+
 	fab_out.fab$b_fac = FAB$M_PUT;
 	fab_out.fab$l_fna = argv[2];
 	fab_out.fab$b_fns = strlen(argv[2]);
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 
 	if ( (status = sys$connect(&rab_in)) != RMS$_NORMAL ) {
 		printf("SYS$CONNECT failed for input file '%s'.\n", argv[1]);
-	  	goto close_both;
+		goto close_both;
 	};
 
 	rab_out.rab$l_fab = &fab_out;
@@ -115,19 +115,19 @@ int main(int argc, char **argv)
 			status = sys$get(&rab_in);
 
 			if (status == RMS$_EOF) {
-		     		printf("Unexpected End of File.\n");
+				printf("Unexpected End of File.\n");
 				status = SS$_ABORT;
-       				goto disconnect_both;
+				goto disconnect_both;
 			} else if ( status != RMS$_NORMAL ) {
 				printf("SYS$GET failed.\n");
-			  	status = SS$_ABORT;
+				status = SS$_ABORT;
 				goto disconnect_both;
 			};
 
-		  	n += rab_in.rab$w_rsz;
+			n += rab_in.rab$w_rsz;
 		};
-                
- 		if (rec->length > 0) {
+
+		if (rec->length > 0) {
 			if (eof >= 1) {
 				/* first block in file */
 				file_no++;
@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 		};
 
 		n -= rec->length + 2;
-	  	memmove(&buffer, &rec->data[rec->length], n);
+		memmove(&buffer, &rec->data[rec->length], n);
 	};
 
 disconnect_both:
