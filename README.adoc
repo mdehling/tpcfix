@@ -1,0 +1,36 @@
+= TPCFIX
+Malte Dehling <mdehling@gmail.com>
+
+
+When files are copied from a UNIX, Windows, or other non-VMS system to a VMS
+system, they are usually stored in a 512 byte fixed size record structure.
+`TPCFIX` is a program to restore the natural variable size record structure of
+TPC format tape archives on (Micro)VMS.  This is required, e.g., to allow
+writing such an archive back to a physical tape using `VMSTPC`.
+
+To build `TPCFIX`, run the `BUILD.COM` command procedure as follows:
+
+----
+$ @BUILD
+Compiling...
+Linking...
+----
+
+Next, define a foreign command for `TPCFIX`:
+
+----
+$ TPCFIX :== $$DISK:[LOCATION]TPCFIX.EXE
+----
+
+You may now run `TPCFIX` as follows:
+
+----
+$ TPCFIX input.tpc output.tpc
+----
+
+Given a 512b fixed record size file `input.tpc`, this should produce
+a file `output.tpc` of variable record size.
+
+`TPCFIX` was compiled and tested on a VAXstation 2000 with TK50Z tape drive
+running MicroVMS v4.7 with VAX-C v2.3.
+
